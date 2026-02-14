@@ -19,10 +19,10 @@ export default function AmorAmistadPage() {
 
                 <div className="text-center mb-12">
                     <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-                        Nuestra Historia en el Jardín
+                        Feliz día del amor y la amistad Tata
                     </h1>
                     <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                        He preparado esta escena especial para ti. Un pequeño jardín donde florece nuestro amor cada día.
+                        Un pequeño regalito para ti, con muchisimo amor❤️
                     </p>
                 </div>
 

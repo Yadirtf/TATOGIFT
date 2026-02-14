@@ -35,7 +35,7 @@ export default function AmorAmistadPage() {
                         Gracias por ser esa personita que siempre me saca una sonrisa, por tu paciencia,
                         por tu cariño y, sobre todo, por el apoyo que me das cuando tengo el ánimo bajo.
                         Gracias por ayudarme a cultivar este amor tan bonito que tenemos.
-                        Este es un "te amo" muy, pero muy sincero
+                        Este es un &quot;te amo&quot; muy, pero muy sincero
                     </p>
                     <div className="mt-8 text-4xl">🌹❤️🌻</div>
                 </div>

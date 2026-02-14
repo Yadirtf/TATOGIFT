@@ -84,7 +84,7 @@ export default function Countdown({ timeRemaining, arrivalDate, isLoading }: Cou
                                         { label: 'Horas', value: timeRemaining.hours },
                                         { label: 'Minutos', value: timeRemaining.minutes },
                                         { label: 'Segundos', value: timeRemaining.seconds }
-                                    ].map((item, index) => (
+                                    ].map((item) => (
                                         <div key={item.label} className="group relative">
                                             <div className="absolute inset-0 bg-orange-200 rounded-xl blur opacity-0 group-hover:opacity-30 transition duration-300"></div>
                                             <div className="relative bg-white rounded-xl p-3 md:p-4 shadow-lg border border-orange-50 transform transition duration-300 group-hover:-translate-y-1">

@@ -22,8 +22,7 @@ export const InteractiveHearts: React.FC = () => {
     useEffect(() => {
         if (!containerRef.current) return;
 
-        const width = containerRef.current.clientWidth;
-        const height = containerRef.current.clientHeight;
+
 
         const svg = d3.select(containerRef.current)
             .append('svg')

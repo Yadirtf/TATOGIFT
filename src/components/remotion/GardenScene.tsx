@@ -3,7 +3,7 @@ import React from 'react';
 
 export const GardenScene: React.FC = () => {
   const frame = useCurrentFrame();
-  const { fps, durationInFrames, width, height } = useVideoConfig();
+  const { fps, durationInFrames } = useVideoConfig();
 
   const photoOpacity = spring({
     frame: frame - 20,
@@ -79,21 +79,21 @@ export const GardenScene: React.FC = () => {
       {/* Photos Garden Layout */}
       <div className="flex gap-8 items-center justify-center z-10">
         <div style={{ transform: `scale(${photo1Scale})`, opacity: photoOpacity }}>
-          <img
+          <Img
             src="/assets/valentine/photo1.png"
             className="w-48 h-64 object-cover rounded-xl border-8 border-white shadow-2xl rotate-[-5deg]"
             alt="Amor 1"
           />
         </div>
         <div style={{ transform: `scale(${photo2Scale})`, opacity: photoOpacity }}>
-          <img
+          <Img
             src="/assets/valentine/photo2.png"
             className="w-56 h-72 object-cover rounded-xl border-8 border-white shadow-2xl z-20"
             alt="Amor 2"
           />
         </div>
         <div style={{ transform: `scale(${photo3Scale})`, opacity: photoOpacity }}>
-          <img
+          <Img
             src="/assets/valentine/photo3.png"
             className="w-48 h-64 object-cover rounded-xl border-8 border-white shadow-2xl rotate-[5deg]"
             alt="Amor 3"

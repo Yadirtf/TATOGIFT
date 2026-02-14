@@ -1,16 +1,16 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 
 // Hook personalizado para evitar problemas de hidratación
 function useClientOnly() {
   const [isClient, setIsClient] = useState(false);
-  
+
   useEffect(() => {
     setIsClient(true);
   }, []);
-  
+
   return isClient;
 }
 
@@ -78,24 +78,24 @@ Tu amorcito ❤️`;
   };
 
   // Función para calcular la posición del cursor
-  const updateCursorPosition = () => {
+  const updateCursorPosition = useCallback(() => {
     if (textRef.current) {
       const textElement = textRef.current;
       const textContent = textElement.textContent || '';
       const lastCharIndex = textContent.length - 1;
-      
+
       if (lastCharIndex >= 0) {
         // Crear un rango temporal para medir la posición
         const range = document.createRange();
         const textNode = textElement.firstChild;
-        
+
         if (textNode) {
           range.setStart(textNode, lastCharIndex);
           range.setEnd(textNode, lastCharIndex);
-          
+
           const rect = range.getBoundingClientRect();
           const textRect = textElement.getBoundingClientRect();
-          
+
           setCursorPosition({
             top: rect.top - textRect.top,
             left: rect.right - textRect.left
@@ -103,22 +103,22 @@ Tu amorcito ❤️`;
         }
       }
     }
-  };
+  }, []);
 
   // Función para centrar la cámara en el área de escritura
-  const centerCameraOnWriting = () => {
+  const centerCameraOnWriting = useCallback(() => {
     if (writingAreaRef.current && isTyping) {
       const writingArea = writingAreaRef.current;
       const viewportHeight = window.innerHeight;
-      
+
       // Obtener la posición del área de escritura
       const writingRect = writingArea.getBoundingClientRect();
       const writingCenter = writingRect.top + writingRect.height / 2;
       const viewportCenter = viewportHeight / 2;
-      
+
       // Calcular cuánto scroll necesitamos para centrar
       const scrollNeeded = writingCenter - viewportCenter;
-      
+
       // Solo hacer scroll si es necesario y significativo
       if (Math.abs(scrollNeeded) > 50) {
         window.scrollBy({
@@ -127,25 +127,25 @@ Tu amorcito ❤️`;
         });
       }
     }
-  };
+  }, [isTyping]);
 
   // Función para hacer scroll automático hacia el cursor
-  const scrollToCursor = () => {
+  const scrollToCursor = useCallback(() => {
     if (textRef.current && isTyping) {
       const textElement = textRef.current;
       const viewportHeight = window.innerHeight;
-      
+
       // Obtener la posición del cursor en relación al viewport
       const textRect = textElement.getBoundingClientRect();
       const cursorTop = textRect.top + cursorPosition.top;
-      
+
       // Calcular la posición ideal del cursor (centro del viewport)
       const idealCursorPosition = viewportHeight * 0.4; // 40% desde arriba
       const currentCursorPosition = cursorTop;
-      
+
       // Calcular cuánto scroll necesitamos
       const scrollAmount = currentCursorPosition - idealCursorPosition;
-      
+
       // Solo hacer scroll si es necesario
       if (Math.abs(scrollAmount) > 30) {
         window.scrollBy({
@@ -154,18 +154,18 @@ Tu amorcito ❤️`;
         });
       }
     }
-  };
+  }, [cursorPosition.top, isTyping]);
 
   // Función para abrir el sello
   const openSeal = () => {
     setSealOpened(true);
-    
+
     // Reproducir música al abrir el sello
     playMusic();
-    
+
     // Desaparecer el sobre lentamente
     setEnvelopeVisible(false);
-    
+
     // Después de que desaparezca el sobre, mostrar la carta
     setTimeout(() => {
       setIsUnfolding(true);
@@ -215,17 +215,17 @@ Tu amorcito ❤️`;
       const timer = setTimeout(updateCursorPosition, 10);
       return () => clearTimeout(timer);
     }
-  }, [currentText, isTyping]);
+  }, [currentText, isTyping, updateCursorPosition]);
 
   // Sistema de cámara que sigue la escritura
   useEffect(() => {
     if (isTyping && cursorPosition.top > 0) {
       // Primero centrar la cámara en el área de escritura
       const centerTimer = setTimeout(centerCameraOnWriting, 100);
-      
+
       // Luego ajustar la posición del cursor
       const cursorTimer = setTimeout(scrollToCursor, 200);
-      
+
       return () => {
         clearTimeout(centerTimer);
         clearTimeout(cursorTimer);
@@ -260,7 +260,7 @@ Tu amorcito ❤️`;
   return (
     <>
       {/* Elemento de audio */}
-      <audio 
+      <audio
         ref={audioRef}
         preload="auto"
         className="hidden"
@@ -270,17 +270,15 @@ Tu amorcito ❤️`;
       </audio>
 
       {/* Overlay de fade-in desde negro (4 segundos) */}
-      <div 
-        className={`fixed inset-0 bg-black z-50 transition-opacity duration-[4000ms] ease-in-out ${
-          pageLoaded ? 'opacity-0 pointer-events-none' : 'opacity-100'
-        }`}
+      <div
+        className={`fixed inset-0 bg-black z-50 transition-opacity duration-[4000ms] ease-in-out ${pageLoaded ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          }`}
       />
 
-      <div 
+      <div
         ref={containerRef}
-        className={`min-h-screen bg-gradient-to-br from-pink-100 via-red-100 to-purple-100 flex items-center justify-center p-4 transition-opacity duration-[4000ms] ease-in-out ${
-          pageLoaded ? 'opacity-100' : 'opacity-0'
-        }`}
+        className={`min-h-screen bg-gradient-to-br from-pink-100 via-red-100 to-purple-100 flex items-center justify-center p-4 transition-opacity duration-[4000ms] ease-in-out ${pageLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
       >
         {/* Efecto de partículas de fondo - solo mostrar en el cliente */}
         {isClient && (
@@ -331,7 +329,7 @@ Tu amorcito ❤️`;
           {envelopeVisible && (
             <div className="relative">
               {/* Sobre principal */}
-              <div 
+              <div
                 className="relative w-96 h-64 mx-auto cursor-pointer transform hover:scale-105 transition-all duration-1000"
                 onClick={openSeal}
                 style={{
@@ -345,15 +343,15 @@ Tu amorcito ❤️`;
                   {/* Líneas del sobre */}
                   <div className="absolute top-1/2 left-0 right-0 h-px bg-gray-400"></div>
                   <div className="absolute top-0 bottom-0 left-1/2 w-px bg-gray-400"></div>
-                  
+
                   {/* Esquina doblada */}
                   <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-gray-200 to-gray-300 transform rotate-45 origin-top-left rounded-tr-lg"></div>
-                  
+
                   {/* Sello en el centro */}
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-gradient-to-br from-red-500 to-pink-600 rounded-full flex items-center justify-center shadow-lg cursor-pointer z-10">
                     <span className="text-white text-2xl">💌</span>
                   </div>
-                  
+
                   {/* Texto indicativo */}
                   <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-sm text-gray-600 font-medium">
                     Haz clic en el sello para abrir
@@ -365,23 +363,23 @@ Tu amorcito ❤️`;
 
           {/* Carta */}
           {sealOpened && !envelopeVisible && (
-            <div 
+            <div
               className="bg-gradient-to-br from-white to-gray-50 rounded-lg shadow-2xl p-8 border border-gray-200 transform hover:scale-105 transition-transform duration-300 relative overflow-hidden"
               style={{
                 opacity: sealOpened ? 1 : 0,
-                transform: sealOpened 
-                  ? (isUnfolding 
-                    ? `perspective(1000px) rotateX(${(100 - unfoldProgress) * 0.9}deg) scaleY(${0.1 + (unfoldProgress / 100) * 0.9})` 
+                transform: sealOpened
+                  ? (isUnfolding
+                    ? `perspective(1000px) rotateX(${(100 - unfoldProgress) * 0.9}deg) scaleY(${0.1 + (unfoldProgress / 100) * 0.9})`
                     : 'perspective(1000px) rotateX(0deg) scaleY(1)')
                   : 'scale(0.8)',
-                transition: sealOpened 
+                transition: sealOpened
                   ? (isUnfolding ? 'none' : 'transform 0.5s ease-out')
                   : 'opacity 0.5s ease-out, transform 0.5s ease-out'
               }}
             >
               {/* Línea de doblez que desaparece gradualmente */}
               {isUnfolding && (
-                <div 
+                <div
                   className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-br from-transparent via-gray-300 to-transparent transform origin-top"
                   style={{
                     transform: `scaleY(${Math.max(0, 1 - unfoldProgress / 50)})`,
@@ -389,7 +387,7 @@ Tu amorcito ❤️`;
                   }}
                 />
               )}
-              
+
               {/* Encabezado de la carta */}
               <div className="text-center mb-8 animate-fadeIn">
                 <div className="w-16 h-16 bg-gradient-to-br from-pink-400 to-red-500 rounded-full mx-auto mb-4 flex items-center justify-center">
@@ -409,7 +407,7 @@ Tu amorcito ❤️`;
               {/* Contenido de la carta */}
               <div className="relative">
                 {/* Texto de la carta */}
-                <div 
+                <div
                   ref={textRef}
                   className="text-gray-700 text-lg leading-relaxed font-serif whitespace-pre-line animate-fadeIn relative"
                   style={{
@@ -419,10 +417,10 @@ Tu amorcito ❤️`;
                   }}
                 >
                   {currentText}
-                  
+
                   {/* Cursor parpadeante que se mueve con el texto */}
                   {isTyping && (
-                    <span 
+                    <span
                       className="absolute w-0.5 h-6 bg-pink-500 animate-pulse"
                       style={{
                         top: cursorPosition.top,
@@ -438,7 +436,7 @@ Tu amorcito ❤️`;
 
           {/* Sello de cera después de abrir */}
           {sealOpened && !envelopeVisible && (
-            <div 
+            <div
               className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-red-500 to-pink-600 rounded-full flex items-center justify-center shadow-lg animate-stamp"
               style={{
                 opacity: isUnfolding ? 0 : 1,
@@ -452,7 +450,7 @@ Tu amorcito ❤️`;
         </div>
 
         {/* Área de escritura invisible para el sistema de cámara */}
-        <div 
+        <div
           ref={writingAreaRef}
           className="absolute pointer-events-none"
           style={{

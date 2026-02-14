@@ -19,14 +19,14 @@ export default function DayModal({ selectedDay, onClose }: DayModalProps) {
         if (dayNumber === 30 && videoRef.current) {
             const video = videoRef.current;
             const playPromise = video.play();
-            
+
             if (playPromise !== undefined) {
                 playPromise
                     .then(() => {
                         // Si la reproducción es exitosa, activar el audio
                         video.muted = false;
                     })
-                    .catch((error) => {
+                    .catch(() => {
                         // Si falla el autoplay, intentar reproducir sin muted
                         console.log('Autoplay con audio bloqueado, intentando reproducir...');
                         video.muted = false;

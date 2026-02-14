@@ -4,16 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-// Hook personalizado para evitar problemas de hidratación
-function useClientOnly() {
-  const [isClient, setIsClient] = useState(false);
-  
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-  
-  return isClient;
-}
+
 
 export default function FloresAmarillas() {
   const [pageLoaded, setPageLoaded] = useState(false);
@@ -51,10 +42,10 @@ export default function FloresAmarillas() {
     const rect = event.currentTarget.getBoundingClientRect();
     const x = rect.left + rect.width / 2;
     const y = rect.top + rect.height / 2;
-    
+
     // Seleccionar una palabra aleatoria
     const palabraAleatoria = palabrasAleatorias[Math.floor(Math.random() * palabrasAleatorias.length)];
-    
+
     // Crear 50 palabras que salen una por una desde el origen
     for (let i = 0; i < 50; i++) {
       setTimeout(() => {
@@ -72,9 +63,9 @@ export default function FloresAmarillas() {
           y: y + (Math.random() - 0.5) * 200, // Dispersión desde el origen
           timestamp: Date.now()
         }];
-        
+
         setErupciones(prev => [...prev, ...nuevasErupciones]);
-        
+
         // Limpiar esta palabra específica después de 4 segundos
         setTimeout(() => {
           setErupciones(prev => prev.filter(erupcion => erupcion.id !== idUnico));
@@ -105,7 +96,7 @@ export default function FloresAmarillas() {
   return (
     <>
       {/* Elemento de audio */}
-      <audio 
+      <audio
         id="rosas-audio"
         preload="auto"
         className="hidden"
@@ -116,16 +107,14 @@ export default function FloresAmarillas() {
       </audio>
 
       {/* Overlay de fade-in */}
-      <div 
-        className={`fixed inset-0 bg-black z-50 transition-opacity duration-1000 ease-in-out ${
-          pageLoaded ? 'opacity-0 pointer-events-none' : 'opacity-100'
-        }`}
+      <div
+        className={`fixed inset-0 bg-black z-50 transition-opacity duration-1000 ease-in-out ${pageLoaded ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          }`}
       />
 
-      <div 
-        className={`min-h-screen relative transition-opacity duration-1000 ease-in-out ${
-          pageLoaded ? 'opacity-100' : 'opacity-0'
-        }`}
+      <div
+        className={`min-h-screen relative transition-opacity duration-1000 ease-in-out ${pageLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
       >
         {/* Fondo con imagen de flores y difuminado oscuro */}
         <div className="absolute inset-0">
@@ -201,7 +190,7 @@ export default function FloresAmarillas() {
                   Por eso esperaba con la carita embarrada jijij
                 </p>
               </div>
-              
+
               <div className="flex items-center justify-center space-x-4">
                 <button
                   onClick={() => {
@@ -216,7 +205,7 @@ export default function FloresAmarillas() {
                 >
                   <span className="text-white text-xl">⏮️</span>
                 </button>
-                
+
                 <button
                   onClick={() => {
                     const audio = document.getElementById('rosas-audio') as HTMLAudioElement;
@@ -233,7 +222,7 @@ export default function FloresAmarillas() {
                 >
                   <span className="text-white text-2xl">▶️</span>
                 </button>
-                
+
                 <button
                   onClick={() => {
                     const audio = document.getElementById('rosas-audio') as HTMLAudioElement;
@@ -247,7 +236,7 @@ export default function FloresAmarillas() {
                   <span className="text-white text-xl">🔊</span>
                 </button>
               </div>
-              
+
               <div className="mt-4">
                 <input
                   type="range"

@@ -8,24 +8,24 @@ import { Volume2, VolumeX } from 'lucide-react';
 
 export default function AmorAmistadPage() {
     const [isPlaying, setIsPlaying] = useState(false);
+    const [showOverlay, setShowOverlay] = useState(true);
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
-    useEffect(() => {
-        // Intentar reproducir automáticamente al cargar
-        const playAudio = async () => {
-            if (audioRef.current) {
-                try {
-                    await audioRef.current.play();
-                    setIsPlaying(true);
-                } catch (err) {
-                    console.log("Autoplay bloqueado por el navegador, se requiere interacción del usuario", err);
-                    setIsPlaying(false);
-                }
+    const handleStart = async () => {
+        if (audioRef.current) {
+            try {
+                await audioRef.current.play();
+                setIsPlaying(true);
+                setShowOverlay(false);
+            } catch (err) {
+                console.error("Error al reproducir audio:", err);
+                // Aún si falla (raro con interacción), ocultamos el overlay para que vean la página
+                setShowOverlay(false);
             }
-        };
-
-        playAudio();
-    }, []);
+        } else {
+            setShowOverlay(false);
+        }
+    };
 
     const togglePlay = () => {
         if (audioRef.current) {
@@ -40,13 +40,36 @@ export default function AmorAmistadPage() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-pink-50 via-red-50 to-purple-50 p-4 md:p-8 flex flex-col items-center relative overflow-hidden">
+            {/* Overlay de Entrada */}
+            {showOverlay && (
+                <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-pink-50/95 backdrop-blur-md transition-opacity duration-700">
+                    <div className="text-center p-8 animate-in fade-in zoom-in duration-500">
+                        <div className="text-6xl mb-6 animate-bounce">💌</div>
+                        <h1 className="text-3xl md:text-5xl font-bold text-pink-600 mb-4 font-serif">
+                            ¡Tengo una sorpresa para ti!
+                        </h1>
+                        <p className="text-lg text-gray-600 mb-8 max-w-md mx-auto">
+                            Preparé algo especial con mucho cariño para este día.
+                        </p>
+                        <button
+                            onClick={handleStart}
+                            className="bg-red-500 hover:bg-red-600 text-white text-xl font-bold py-4 px-10 rounded-full shadow-xl transform transition hover:scale-105 active:scale-95 flex items-center mx-auto gap-3"
+                        >
+                            <span>Ver mi regalo</span>
+                            <span>💝</span>
+                        </button>
+                    </div>
+                </div>
+            )}
+
             <InteractiveHearts />
-            
+
             {/* Audio Element */}
-            <audio 
-                ref={audioRef} 
-                src="/assets/valentine/14febrerocancion.mp3" 
-                loop 
+            <audio
+                ref={audioRef}
+                src="/assets/valentine/14febrerocancion.mp3"
+                loop
+                playsInline
             />
 
             {/* Floating Music Control */}
